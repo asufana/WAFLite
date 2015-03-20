@@ -7,6 +7,7 @@ import java.util.*;
 
 import lombok.*;
 
+import com.github.asufana.waf.exceptions.*;
 import com.github.asufana.waf.interfaces.*;
 
 public class HandleBuilder {
@@ -62,7 +63,7 @@ public class HandleBuilder {
                                                .equals(httpString.toString()
                                                                  .toUpperCase()))
                          .findFirst()
-                         .orElseThrow(() -> new RuntimeException("指定のHTTPメソッドはありません: "
+                         .orElseThrow(() -> new WAFLiteException("指定のHTTPメソッドはありません: "
                                  + httpString.toString()));
         }
     }
