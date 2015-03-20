@@ -5,11 +5,11 @@ import io.undertow.util.*;
 
 import java.util.*;
 
-public class Request {
+public class WLRequest {
     
     private final HttpServerExchange exchange;
     
-    public Request(final HttpServerExchange exchange) {
+    public WLRequest(final HttpServerExchange exchange) {
         this.exchange = exchange;
     }
     

@@ -3,11 +3,11 @@ package com.github.asufana.waf.functions;
 import lombok.*;
 
 @Getter
-public class Response {
+public class WLResponse {
     
     private String renderStrings;
     
-    Response() {}
+    WLResponse() {}
     
     public void render(final String renderString) {
         renderStrings = renderString;

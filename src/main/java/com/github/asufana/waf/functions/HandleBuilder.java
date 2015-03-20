@@ -24,8 +24,8 @@ public class HandleBuilder {
         return new HttpHandler() {
             @Override
             public void handleRequest(final HttpServerExchange exchange) throws Exception {
-                final Request request = new Request(exchange);
-                final Response response = new Response();
+                final WLRequest request = new WLRequest(exchange);
+                final WLResponse response = new WLResponse();
                 final String relativePath = exchange.getRelativePath();
                 final RouteAction action = pathFunctionMap.get(new Path(relativePath));
                 if (action != null) {
