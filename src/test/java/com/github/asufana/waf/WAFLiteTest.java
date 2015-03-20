@@ -25,7 +25,10 @@ public class WAFLiteTest {
     public void testAddRoute() throws Exception {
         final String url = "/hoge";
         final String content = "Hello Hoge!";
-        waf.get(url, content).start();
+        waf.get(url, ex -> {
+            ex.getResponseSender().send(content);
+            return ex;
+        }).start();
         
         assertThat(Http.get(port, url), is(content));
     }
