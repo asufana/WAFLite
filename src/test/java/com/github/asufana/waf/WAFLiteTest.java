@@ -9,15 +9,16 @@ import com.github.asufana.waf.testutils.*;
 
 public class WAFLiteTest {
     
-    private final WAFLite waf = new WAFLite();
+    private final Integer port = 8888;
+    private final WAFLite waf = new WAFLite(port);
     
     @Test
     public void testServerStartAndStop() throws Exception {
         final Stoppable stoppable = waf.start();
-        assertThat(Netstat.isPortOpen(8080), is(true));
+        assertThat(Netstat.isPortOpen(port), is(true));
         
         stoppable.stop();
-        assertThat(Netstat.isPortOpen(8080), is(false));
+        assertThat(Netstat.isPortOpen(port), is(false));
     }
     
     @Test
@@ -26,6 +27,6 @@ public class WAFLiteTest {
         final String content = "Hello Hoge!";
         waf.get(url, content).start();
         
-        assertThat(Http.get(8080, url), is(content));
+        assertThat(Http.get(port, url), is(content));
     }
 }

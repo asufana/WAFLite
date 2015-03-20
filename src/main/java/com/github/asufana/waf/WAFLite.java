@@ -7,9 +7,19 @@ import io.undertow.util.*;
 import java.util.*;
 
 public class WAFLite {
+    private static final Integer DEFAULT_PORT = 8080;
     
+    private final Integer port;
     private Undertow server;
     private final Map<String, String> requestMap = new HashMap<String, String>();
+    
+    public WAFLite() {
+        this(DEFAULT_PORT);
+    }
+    
+    public WAFLite(final Integer port) {
+        this.port = port;
+    }
     
     public WAFLite get(final String path, final String response) {
         requestMap.put(path, response);
@@ -18,7 +28,7 @@ public class WAFLite {
     
     public Stoppable start() {
         server = Undertow.builder()
-                         .addHttpListener(8080, "localhost")
+                         .addHttpListener(port, "localhost")
                          .setHandler(new HttpHandler() {
                              @Override
                              public void handleRequest(final HttpServerExchange exchange) throws Exception {
