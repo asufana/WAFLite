@@ -25,9 +25,11 @@ public class WAFLiteTest {
     @Test
     public void testAddRoute() throws Exception {
         waf.get("/hoge",
-                req -> String.format("Hello Hoge! ( Method: %s )", req.method()));
+                (req, res) -> res.render(String.format("Hello Hoge! ( Method: %s )",
+                                                       req.method())));
         waf.get("/moge",
-                req -> String.format("Hello Moge! ( Method: %s )", req.method()));
+                (req, res) -> res.render(String.format("Hello Moge! ( Method: %s )",
+                                                       req.method())));
         waf.start();
         
         assertThat(Http.get(port, "/hoge"), is("Hello Hoge! ( Method: GET )"));

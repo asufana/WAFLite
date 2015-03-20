@@ -25,10 +25,12 @@ public class HandleBuilder {
             @Override
             public void handleRequest(final HttpServerExchange exchange) throws Exception {
                 final Request request = new Request(exchange);
+                final Response response = new Response();
                 final String relativePath = exchange.getRelativePath();
                 final RouteAction action = pathFunctionMap.get(new Path(relativePath));
                 if (action != null) {
-                    exchange.getResponseSender().send(action.apply(request));
+                    action.apply(request, response);
+                    exchange.getResponseSender().send(response.renderStrings());
                 }
                 else {
                     exchange.getResponseSender().send("404 NOT FOUND");
