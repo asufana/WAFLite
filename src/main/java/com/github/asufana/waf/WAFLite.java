@@ -21,7 +21,7 @@ public class WAFLite {
         this.port = port;
     }
     
-    public WAFLite get(final String path, final ServerFunction function) {
+    public WAFLite get(final String path, final RouteAction function) {
         handlerBuilder.add(new Path(path), function);
         return this;
     }

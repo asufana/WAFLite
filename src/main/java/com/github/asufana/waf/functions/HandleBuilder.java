@@ -11,12 +11,11 @@ import com.github.asufana.waf.interfaces.*;
 
 public class HandleBuilder {
     
-    private final Map<Path, ServerFunction> pathFunctionMap = new HashMap<>();
+    private final Map<Path, RouteAction> pathFunctionMap = new HashMap<>();
     
     public HandleBuilder() {}
     
-    public HandleBuilder add(final Path path,
-                                    final ServerFunction function) {
+    public HandleBuilder add(final Path path, final RouteAction function) {
         pathFunctionMap.put(path, function);
         return this;
     }
@@ -24,11 +23,12 @@ public class HandleBuilder {
     public HttpHandler build() {
         return new HttpHandler() {
             @Override
-            public void handleRequest(HttpServerExchange exchange) throws Exception {
+            public void handleRequest(final HttpServerExchange exchange) throws Exception {
+                final Request request = new Request(exchange);
                 final String relativePath = exchange.getRelativePath();
-                final ServerFunction function = pathFunctionMap.get(new Path(relativePath));
-                if (function != null) {
-                    exchange = function.apply(exchange);
+                final RouteAction action = pathFunctionMap.get(new Path(relativePath));
+                if (action != null) {
+                    exchange.getResponseSender().send(action.apply(request));
                 }
                 else {
                     exchange.getResponseSender().send("404 NOT FOUND");
