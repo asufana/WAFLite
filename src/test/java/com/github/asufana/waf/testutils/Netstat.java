@@ -1,26 +1,11 @@
-package com.github.asufana;
-
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+package com.github.asufana.waf.testutils;
 
 import java.io.*;
 import java.util.*;
 
-import org.junit.*;
-
-public class WAFLiteTest {
+public class Netstat {
     
-    @Test
-    public void testStart() throws Exception {
-        final WAFLite waf = new WAFLite();
-        final Stoppable stoppable = waf.start();
-        assertThat(isPortOpen(8080), is(true));
-        
-        stoppable.stop();
-        assertThat(isPortOpen(8080), is(false));
-    }
-    
-    private boolean isPortOpen(final Integer portNumber) throws IOException {
+    public static boolean isPortOpen(final Integer portNumber) throws IOException {
         final String cmdString = String.format("netstat -an | grep .%s",
                                                portNumber.toString());
         final String[] cmdarray = {"/bin/sh", "-c", cmdString};

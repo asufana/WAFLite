@@ -1,4 +1,4 @@
-package com.github.asufana;
+package com.github.asufana.waf;
 
 public interface Stoppable {
     void stop();
