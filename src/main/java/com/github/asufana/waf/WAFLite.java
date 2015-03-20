@@ -26,14 +26,14 @@ public class WAFLite {
         return this;
     }
     
-    public Stoppable start() {
+    public Server start() {
         server = Undertow.builder()
                          .addHttpListener(port, "localhost")
                          .setHandler(handlerBuilder.build())
                          .build();
         server.start();
         
-        return new Stoppable() {
+        return new Server() {
             @Override
             public void stop() {
                 server.stop();

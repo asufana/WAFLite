@@ -33,7 +33,7 @@ public class HandleBuilder {
                     exchange.getResponseSender().send(response.renderStrings());
                 }
                 else {
-                    exchange.getResponseSender().send("404 NOT FOUND");
+                    exchange.setResponseCode(404);
                 }
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE,
                                                   "text/plain");

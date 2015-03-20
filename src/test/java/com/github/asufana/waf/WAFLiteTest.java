@@ -7,6 +7,7 @@ import org.junit.*;
 
 import com.github.asufana.waf.interfaces.*;
 import com.github.asufana.waf.testutils.*;
+import com.github.asufana.waf.testutils.Http.HttpResponse;
 
 public class WAFLiteTest {
     
@@ -15,10 +16,10 @@ public class WAFLiteTest {
     
     @Test
     public void testServerStartAndStop() throws Exception {
-        final Stoppable stoppable = waf.start();
+        final Server server = waf.start();
         assertThat(Netstat.isPortOpen(port), is(true));
         
-        stoppable.stop();
+        server.stop();
         assertThat(Netstat.isPortOpen(port), is(false));
     }
     
@@ -30,9 +31,24 @@ public class WAFLiteTest {
         waf.get("/moge",
                 (req, res) -> res.render(String.format("Hello Moge! ( Method: %s )",
                                                        req.method())));
-        waf.start();
+        final Server server = waf.start();
         
-        assertThat(Http.get(port, "/hoge"), is("Hello Hoge! ( Method: GET )"));
-        assertThat(Http.get(port, "/moge"), is("Hello Moge! ( Method: GET )"));
+        final HttpResponse res01 = Http.get(port, "/hoge");
+        assertThat(res01.code(), is(200));
+        assertThat(res01.contents(), is("Hello Hoge! ( Method: GET )"));
+        
+        final HttpResponse res02 = Http.get(port, "/moge");
+        assertThat(res02.code(), is(200));
+        assertThat(res02.contents(), is("Hello Moge! ( Method: GET )"));
+        
+        server.stop();
+    }
+    
+    @Test
+    public void testNotFound() throws Exception {
+        final Server server = waf.start();
+        assertThat(Http.get(port, "/hoge").code(), is(404));
+        
+        server.stop();
     }
 }
