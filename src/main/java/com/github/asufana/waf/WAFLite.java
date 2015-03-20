@@ -3,6 +3,8 @@ package com.github.asufana.waf;
 import io.undertow.*;
 
 import com.github.asufana.waf.functions.*;
+import com.github.asufana.waf.functions.HandleBuilder.Action;
+import com.github.asufana.waf.functions.HandleBuilder.Method;
 import com.github.asufana.waf.functions.HandleBuilder.Path;
 import com.github.asufana.waf.interfaces.*;
 
@@ -21,8 +23,8 @@ public class WAFLite {
         this.port = port;
     }
     
-    public WAFLite get(final String path, final RouteAction function) {
-        handlerBuilder.add(new Path(path), function);
+    public WAFLite get(final String path, final RouteAction action) {
+        handlerBuilder.add(new Path(path), new Action(action, Method.GET));
         return this;
     }
     

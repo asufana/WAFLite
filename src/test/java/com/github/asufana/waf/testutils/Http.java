@@ -22,6 +22,21 @@ public class Http {
         }
     }
     
+    public static HttpResponse post(final Integer port, final String url) {
+        final OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder().url(createUrl(port, url))
+                                                     .post(null)
+                                                     .build();
+        
+        try {
+            final Response response = client.newCall(request).execute();
+            return new HttpResponse(response);
+        }
+        catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
     private static String createUrl(final Integer port, final String url) {
         return String.format("%s:%s%s", BASE_URL, port.toString(), url);
     }

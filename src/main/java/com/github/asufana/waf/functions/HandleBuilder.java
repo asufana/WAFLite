@@ -11,12 +11,12 @@ import com.github.asufana.waf.interfaces.*;
 
 public class HandleBuilder {
     
-    private final Map<Path, RouteAction> pathFunctionMap = new HashMap<>();
+    private final Map<Path, Action> pathFunctionMap = new HashMap<>();
     
     public HandleBuilder() {}
     
-    public HandleBuilder add(final Path path, final RouteAction function) {
-        pathFunctionMap.put(path, function);
+    public HandleBuilder add(final Path path, final Action action) {
+        pathFunctionMap.put(path, action);
         return this;
     }
     
@@ -27,9 +27,12 @@ public class HandleBuilder {
                 final Request request = new Request(exchange);
                 final Response response = new Response();
                 final String relativePath = exchange.getRelativePath();
-                final RouteAction action = pathFunctionMap.get(new Path(relativePath));
-                if (action != null) {
-                    action.apply(request, response);
+                final Action action = pathFunctionMap.get(new Path(relativePath));
+                if (action != null
+                        && action.method()
+                                 .equals(Method.valueOf(request.method()))) {
+                    final RouteAction routeAction = action.routeAction();
+                    routeAction.apply(request, response);
                     exchange.getResponseSender().send(response.renderStrings());
                 }
                 else {
@@ -39,6 +42,29 @@ public class HandleBuilder {
                                                   "text/plain");
             }
         };
+    }
+    
+    @Value
+    public static class Action {
+        private final RouteAction routeAction;
+        private final Method method;
+    }
+    
+    public static enum Method {
+        GET,
+        POST;
+        
+        public static Method valueOf(final HttpString httpString) {
+            return Arrays.asList(values())
+                         .stream()
+                         .filter(value -> value.name()
+                                               .toUpperCase()
+                                               .equals(httpString.toString()
+                                                                 .toUpperCase()))
+                         .findFirst()
+                         .orElseThrow(() -> new RuntimeException("指定のHTTPメソッドはありません: "
+                                 + httpString.toString()));
+        }
     }
     
     @Value

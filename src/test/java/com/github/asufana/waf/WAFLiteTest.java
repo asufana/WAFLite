@@ -47,7 +47,18 @@ public class WAFLiteTest {
     @Test
     public void testNotFound() throws Exception {
         final Server server = waf.start();
-        assertThat(Http.get(port, "/hoge").code(), is(404));
+        assertThat(Http.get(port, "/").code(), is(404));
+        
+        server.stop();
+    }
+    
+    @Test
+    public void testRequestMethod() throws Exception {
+        waf.get("/", (req, res) -> res.render("Hello"));
+        final Server server = waf.start();
+        
+        assertThat(Http.get(port, "/").code(), is(200));
+        assertThat(Http.post(port, "/").code(), is(404));
         
         server.stop();
     }
