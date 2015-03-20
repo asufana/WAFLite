@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import org.junit.*;
 
+import com.github.asufana.waf.interfaces.*;
 import com.github.asufana.waf.testutils.*;
 
 public class WAFLiteTest {
@@ -23,13 +24,17 @@ public class WAFLiteTest {
     
     @Test
     public void testAddRoute() throws Exception {
-        final String url = "/hoge";
-        final String content = "Hello Hoge!";
-        waf.get(url, ex -> {
-            ex.getResponseSender().send(content);
+        waf.get("/hoge", ex -> {
+            ex.getResponseSender().send("Hello Hoge!");
             return ex;
-        }).start();
+        });
+        waf.get("/moge", ex -> {
+            ex.getResponseSender().send("Hello Moge!");
+            return ex;
+        });
+        waf.start();
         
-        assertThat(Http.get(port, url), is(content));
+        assertThat(Http.get(port, "/hoge"), is("Hello Hoge!"));
+        assertThat(Http.get(port, "/moge"), is("Hello Moge!"));
     }
 }
