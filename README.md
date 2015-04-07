@@ -2,7 +2,7 @@
 
 # WAFLite
 
-[![Build Status](https://travis-ci.org/asufana/WAFLite.svg?branch=master)](https://travis-ci.org/asufana/WAFLite)
+<!--[![Build Status](https://travis-ci.org/asufana/WAFLite.svg?branch=master)](https://travis-ci.org/asufana/WAFLite)-->
 
 A Sinatra-like simple Web Application Framework for Java8.
 
